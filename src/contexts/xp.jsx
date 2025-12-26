@@ -1,29 +1,29 @@
 "use client";
 
 import { createContext, useState, useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/contexts/auth";
 
 const xpContext = createContext();
 
 export const XpProvider = ({ children }) => {
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const [xp, setXp] = useState(0);
   const [show, setShow] = useState(false);
   const [changed, setChanged] = useState(0);
 
-  // async function change() {
-  //   setShow(true);
-  //   setTimeout(() => {
-  //     setShow(false);
-  //     setChanged(0);
-  //   }, 800);
-  // }
+  async function change() {
+    setShow(true);
+    setTimeout(() => {
+      setShow(false);
+      setChanged(0);
+    }, 2000);
+  }
 
   const getXp = useCallback(async () => {
-    if (!session?.user?.email) return;
+    if (!user?.email) return;
 
     try {
-      const res = await fetch(`/api/gamification/stats?userId=${session.user.email}`);
+      const res = await fetch(`/api/gamification/stats?userId=${user.email}`);
       const data = await res.json();
 
       if (data && typeof data.xp === "number") {
@@ -39,43 +39,46 @@ export const XpProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching XP:", error);
     }
-  }, []);
+  }, [user, xp]);
 
-  const awardXP = useCallback(async (action, value = null) => {
-    if (!session?.user?.email) return;
+  const awardXP = useCallback(
+    async (action, value = null) => {
+      if (!user?.email) return;
 
-    try {
-      const res = await fetch("/api/gamification/stats", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: session.user.email,
-          action,
-          value,
-        }),
-      });
+      try {
+        const res = await fetch("/api/gamification/stats", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user.email,
+            action,
+            value,
+          }),
+        });
 
-      const result = await res.json();
+        const result = await res.json();
 
-      if (result.success) {
-        // Refresh XP to show the update
-        await getXp();
-        return result;
+        if (result.success) {
+          // Refresh XP to show the update
+          await getXp();
+          return result;
+        }
+      } catch (error) {
+        console.error("Error awarding XP:", error);
       }
-    } catch (error) {
-      console.error("Error awarding XP:", error);
+    },
+    [user, getXp]
+  );
+
+  useEffect(() => {
+    if (user?.email) {
+      getXp();
+
+      // Poll for XP updates every 10 seconds for real-time feel
+      const interval = setInterval(getXp, 10000);
+      return () => clearInterval(interval);
     }
-  }, []);
-
-  // useEffect(() => {
-  //   if (session?.user?.email) {
-  //     getXp();
-
-  //     // Poll for XP updates every 5 seconds for real-time feel
-  //     const interval = setInterval(getXp, 5000);
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [session, getXp]);
+  }, [user, getXp]);
 
   return <xpContext.Provider value={{ getXp, awardXP, xp, show, changed }}>{children}</xpContext.Provider>;
 };
