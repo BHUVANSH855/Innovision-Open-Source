@@ -80,8 +80,16 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const logout = () => {
-    return signOut(auth);
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      // Clear session cookie
+      await fetch("/api/auth/session", { method: "DELETE" });
+      setUser(null);
+    } catch (error) {
+      console.error("Logout error:", error);
+      throw error;
+    }
   };
 
   const saveUserToFirestore = async (user, providerName) => {
