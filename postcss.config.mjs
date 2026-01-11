@@ -1,11 +1,7 @@
 const config = {
-    darkMode: "class", // Enable class-based dark mode
-    theme: {
-      extend: {
-      },
-    },
-   
-  plugins: ["@tailwindcss/postcss"],
+  plugins: {
+    tailwindcss: {},
+  },
 };
 
 export default config;
