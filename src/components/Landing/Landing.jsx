@@ -14,17 +14,17 @@ import { MorphingDecoration } from "./MorphingSVG";
 
 export default function Landing() {
   return (
-    <div className="relative flex h-screen overflow-y-scroll flex-col scroll-smooth">
+    <div className="relative flex min-h-screen overflow-x-hidden flex-col scroll-smooth">
       {/* Background Effects */}
       <ParticleBackground />
       <GradientBlob />
       <CursorFollower size={16} delay={0.15} />
       
-      {/* Morphing decorations */}
-      <MorphingDecoration className="top-[20%] right-[5%] w-64 h-64 opacity-50" />
-      <MorphingDecoration className="top-[60%] left-[5%] w-48 h-48 opacity-40" />
+      {/* Morphing decorations - hidden on mobile */}
+      <MorphingDecoration className="hidden md:block top-[20%] right-[5%] w-64 h-64 opacity-50" />
+      <MorphingDecoration className="hidden md:block top-[60%] left-[5%] w-48 h-48 opacity-40" />
 
-      <div className="relative z-[2] flex flex-col items-center">
+      <div className="relative z-[2] flex flex-col items-center w-full">
         <Hero />
         <Features />
         <HowItWorks />
