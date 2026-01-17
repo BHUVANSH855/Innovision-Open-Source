@@ -99,6 +99,15 @@ const FeatureSection = ({ icon: Icon, iconColor, title, features, columns = 3, b
   </div>
 );
 
+const whyChooseFeatures = [
+  { icon: Sparkles, title: "AI-Powered Generation", description: "Our advanced AI creates comprehensive courses on any topic in seconds.", color: "text-blue-500", bgColor: "bg-blue-500/10" },
+  { icon: Layers, title: "Chapter-wise Learning", description: "Structured content organized into logical chapters for better understanding.", color: "text-purple-500", bgColor: "bg-purple-500/10" },
+  { icon: Compass, title: "Personalized Path", description: "Courses adapt to your learning style, pace, and existing knowledge.", color: "text-cyan-500", bgColor: "bg-cyan-500/10" },
+  { icon: BookOpen, title: "Interactive Exercises", description: "Reinforce learning with quizzes, challenges, and practical exercises.", color: "text-green-500", bgColor: "bg-green-500/10" },
+  { icon: CheckCircle, title: "Progress Tracking", description: "Monitor your learning journey with detailed analytics and insights.", color: "text-orange-500", bgColor: "bg-orange-500/10" },
+  { icon: Target, title: "Any Topic, Any Level", description: "From beginner to advanced, learn anything you're interested in.", color: "text-pink-500", bgColor: "bg-pink-500/10" },
+];
+
 const Features = () => {
   const [showAllPremium, setShowAllPremium] = useState(false);
 
@@ -110,6 +119,25 @@ const Features = () => {
       </div>
 
       <div className="container relative z-10 px-4 md:px-6 mx-auto">
+        {/* Why Choose InnoVision Section */}
+        <ScrollReveal direction="up">
+          <div className="flex flex-col items-center justify-center text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
+              Why Choose InnoVision?
+            </h2>
+            <p className="max-w-2xl text-muted-foreground text-lg mb-12">
+              Our platform combines cutting-edge AI with proven learning methodologies to create the most effective learning experience.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-24">
+          {whyChooseFeatures.map((feature, index) => (
+            <FeatureCard key={feature.title} feature={feature} index={index} />
+          ))}
+        </div>
+
+        {/* All Features Section */}
         <ScrollReveal direction="up">
           <div className="flex flex-col items-center justify-center text-center mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
@@ -120,7 +148,7 @@ const Features = () => {
               <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">Learn Effectively</span>
             </h2>
             <p className="max-w-2xl text-muted-foreground text-lg">
-              Our platform combines cutting-edge AI with proven learning methodologies and gamification to create the most engaging learning experience.
+              Explore our comprehensive suite of features designed to enhance your learning journey.
             </p>
           </div>
         </ScrollReveal>
