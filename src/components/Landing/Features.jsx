@@ -11,6 +11,67 @@ import {
 } from "lucide-react";
 import { ScrollReveal, StaggerReveal } from "./ScrollReveal";
 
+// Advanced 3D tilt card component
+const FeatureCard3D = ({ feature, premium, index = 0 }) => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <ScrollReveal delay={index * 100} direction="up">
+      <Card 
+        className="group relative overflow-hidden border border-border bg-background backdrop-blur-sm transition-all duration-500 hover:border-border/60 hover:-translate-y-2 h-full cursor-pointer"
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          transform: isHovered 
+            ? `perspective(1000px) rotateX(${(mousePosition.y - 150) / 30}deg) rotateY(${(mousePosition.x - 150) / 30}deg) scale3d(1.02, 1.02, 1.02)`
+            : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+        }}
+      >
+        {/* Mouse spotlight effect */}
+        {isHovered && (
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{
+              background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, ${feature.color}15, transparent 40%)`,
+            }}
+          />
+        )}
+        
+        {premium && (
+          <div className="absolute top-3 right-3 z-10">
+            <span className="px-2 py-0.5 rounded-full border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 text-xs font-light flex items-center gap-1 backdrop-blur-sm">
+              <Crown className="h-3 w-3" /> Premium
+            </span>
+          </div>
+        )}
+        <CardHeader className="relative z-10">
+          <div 
+            className="w-12 h-12 rounded-xl border border-border flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-500 group-hover:rotate-6"
+            style={{ 
+              borderColor: `${feature.color}20`,
+              boxShadow: isHovered ? `0 0 20px ${feature.color}40` : 'none'
+            }}
+          >
+            <feature.icon className="h-6 w-6 transition-all duration-500" style={{ color: feature.color }} />
+          </div>
+          <CardTitle className={`text-lg font-light mb-2 text-foreground ${premium ? 'pr-16' : ''}`}>{feature.title}</CardTitle>
+          <CardDescription className="text-muted-foreground leading-relaxed text-sm font-light">{feature.description}</CardDescription>
+        </CardHeader>
+      </Card>
+    </ScrollReveal>
+  );
+};
+
 const courseFeatures = [
   { icon: Sparkles, title: "AI Course Generation", description: "Generate comprehensive courses on any topic in seconds using Google Gemini AI.", color: "#3b82f6" },
   { icon: PlaySquare, title: "YouTube Courses", description: "Transform any YouTube video into a structured learning course automatically.", color: "#ef4444" },
@@ -56,26 +117,7 @@ const uxFeatures = [
   { icon: Users, title: "Profile Dashboard", description: "Overview, Progress, Courses, Compete, Activity, and Settings.", color: "#3b82f6" },
 ];
 
-const FeatureCard = ({ feature, premium, index = 0 }) => (
-  <ScrollReveal delay={index * 100} direction="up">
-    <Card className="group relative overflow-hidden border border-border bg-background backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:-translate-y-2 h-full">
-      {premium && (
-        <div className="absolute top-3 right-3">
-          <span className="px-2 py-0.5 rounded-full border border-yellow-500/20 text-yellow-400 text-xs font-light flex items-center gap-1">
-            <Crown className="h-3 w-3" /> Premium
-          </span>
-        </div>
-      )}
-      <CardHeader className="relative">
-        <div className="w-12 h-12 rounded-xl border border-border flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300" style={{ borderColor: `${feature.color}20` }}>
-          <feature.icon className="h-6 w-6" style={{ color: feature.color }} />
-        </div>
-        <CardTitle className={`text-lg font-light mb-2 text-foreground ${premium ? 'pr-16' : ''}`}>{feature.title}</CardTitle>
-        <CardDescription className="text-muted-foreground leading-relaxed text-sm font-light">{feature.description}</CardDescription>
-      </CardHeader>
-    </Card>
-  </ScrollReveal>
-);
+const FeatureCard = ({ feature, premium, index = 0 }) => <FeatureCard3D feature={feature} premium={premium} index={index} />;
 
 const FeatureSection = ({ icon: Icon, iconColor, title, features, columns = 3, badge }) => (
   <div className="mb-20">
