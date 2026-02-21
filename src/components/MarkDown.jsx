@@ -36,8 +36,8 @@ const CopyButton = ({ code, theme }) => {
         ${copied
           ? "bg-green-500/20 text-green-400"
           : theme === "dark"
-          ? "bg-gray-700/50 text-gray-400 hover:bg-gray-600/50 hover:text-gray-200"
-          : "bg-gray-300/50 text-gray-600 hover:bg-gray-400/50 hover:text-gray-800"
+            ? "bg-gray-700/50 text-gray-400 hover:bg-gray-600/50 hover:text-gray-200"
+            : "bg-gray-300/50 text-gray-600 hover:bg-gray-400/50 hover:text-gray-800"
         }
       `}
       title={copied ? "Copied!" : "Copy code"}
@@ -97,11 +97,10 @@ const MarkDown = ({ content }) => {
           return !inline && match ? (
             <div className="relative group my-4">
               {/* Language badge */}
-              <div className={`absolute top-0 left-0 px-3 py-1 text-xs font-medium rounded-tl-md rounded-br-md ${
-                theme === "dark" 
-                  ? "text-gray-400 bg-gray-800" 
+              <div className={`absolute top-0 left-0 px-3 py-1 text-xs font-medium rounded-tl-md rounded-br-md ${theme === "dark"
+                  ? "text-gray-400 bg-gray-800"
                   : "text-gray-600 bg-gray-200"
-              }`}>
+                }`}>
                 {match[1]}
               </div>
 

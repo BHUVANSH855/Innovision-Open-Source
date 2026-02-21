@@ -39,19 +39,19 @@ export default function GamificationPage() {
         <ScrollReveal delay={100}>
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList className="flex flex-wrap h-auto w-full gap-1 p-1 bg-muted/50 backdrop-blur-sm">
-              <TabsTrigger value="overview" className="flex-1 min-w-[80px] text-xs data-[state=active]:bg-background">
+              <TabsTrigger value="overview" className="flex-1 min-w-20 text-xs data-[state=active]:bg-background">
                 <Trophy className="h-3 w-3 mr-1" />
                 Overview
               </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex-1 min-w-[80px] text-xs data-[state=active]:bg-background">
+              <TabsTrigger value="analytics" className="flex-1 min-w-20 text-xs data-[state=active]:bg-background">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 Analytics
               </TabsTrigger>
-              <TabsTrigger value="challenges" className="flex-1 min-w-[80px] text-xs data-[state=active]:bg-background">
+              <TabsTrigger value="challenges" className="flex-1 min-w-20 text-xs data-[state=active]:bg-background">
                 <Target className="h-3 w-3 mr-1" />
                 Challenges
               </TabsTrigger>
-              <TabsTrigger value="skills" className="flex-1 min-w-[80px] text-xs data-[state=active]:bg-background">
+              <TabsTrigger value="skills" className="flex-1 min-w-20 text-xs data-[state=active]:bg-background">
                 <Brain className="h-3 w-3 mr-1" />
                 Skills
               </TabsTrigger>

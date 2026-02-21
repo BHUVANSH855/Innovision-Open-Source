@@ -1,14 +1,12 @@
-
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const MAX_INPUT_CHARS = 100000; 
-const MIN_CHAPTER_LENGTH = 200; 
+const MAX_INPUT_CHARS = 100000;
+const MIN_CHAPTER_LENGTH = 200;
 
 export async function chunkContentWithAI(text, fileName) {
-   
+
     const truncatedText =
         text.length > MAX_INPUT_CHARS ? text.slice(0, MAX_INPUT_CHARS) : text;
 
@@ -47,7 +45,7 @@ ${truncatedText}
         const result = await model.generateContent(prompt);
         const response = result.response.text();
 
-       
+
         let cleanedResponse = response.trim();
         if (cleanedResponse.startsWith("```")) {
             cleanedResponse = cleanedResponse

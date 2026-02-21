@@ -191,8 +191,8 @@ export default function ContactPage() {
               </div>
             </ScrollReveal>
           )}
+        </div>
       </div>
-    </div>
     </div >
   );
 }
