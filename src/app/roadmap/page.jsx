@@ -226,7 +226,7 @@ export default function page() {
             <PageBackground variant="courses" />
             <GridPattern opacity={0.02} />
 
-            <div className="max-w-6xl flex flex-col gap-4 items-center p-4 mb-16 mx-auto relative z-10">
+            <div className="max-w-6xl flex flex-col gap-4 items-center p-4 mt-10 mb-16 mx-auto relative z-10">
                 <PageHeader
                     title="Your Courses"
                     description="Manage and continue your learning journey"
