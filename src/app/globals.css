@@ -612,12 +612,6 @@ body {
 
 /* Do NOT override your theme backgrounds here.
    Let :root / .dark tokens handle light vs dark. */
-.night-mode.dark body,
-.night-mode.dark .bg-background,
-.night-mode.dark .bg-card,
-.night-mode.dark .bg-muted {
-  background-color: transparent !important;
-}
 
 /* Keep border colors from the design system */
 .night-mode .border {
