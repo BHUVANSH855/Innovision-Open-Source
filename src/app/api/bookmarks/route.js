@@ -79,12 +79,32 @@ export async function POST(request) {
       const notifBody = chapterLabel
         ? `You bookmarked "${chapterLabel}" in ${title}.`
         : `You bookmarked the course "${title}".`;
+
+      let notifLink = "/roadmap";
+      if (type === "ingested") {
+        if (chapterId) {
+          notifLink = `/ingested-course/${id}/${chapterId}`;
+        } else if (chapterNumber && chapterNumber !== 0) {
+          notifLink = `/ingested-course/${id}/${chapterNumber}`;
+        } else {
+          notifLink = `/ingested-course/${id}`;
+        }
+      } else if (type === "youtube") {
+        notifLink = `/youtube-course/${id}`;
+      } else {
+        if (chapterNumber && chapterNumber !== 0) {
+          notifLink = `/chapter-test/${id}/${chapterNumber}`;
+        } else {
+          notifLink = `/roadmap/${id}`;
+        }
+      }
+
       createNotification(adminDb, {
         userId: session.user.email,
         title: "Bookmark Saved",
         body: notifBody,
         type: "progress",
-        link: "/roadmap",
+        link: notifLink,
       }).catch(() => { });
     }
 
