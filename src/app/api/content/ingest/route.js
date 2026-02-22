@@ -6,7 +6,6 @@ import { getAdminDb } from "@/lib/firebase-admin";
 
 export async function POST(request) {
   try {
-    // Try to get user ID from auth, but allow anonymous for testing
     let userId = "anonymous";
 
     try {
@@ -19,7 +18,6 @@ export async function POST(request) {
       }
     } catch (authError) {
       console.log("[DEBUG] Auth verification failed, using anonymous:", authError.message);
-      // Continue with anonymous userId — don't block the pipeline
     }
 
     console.log("[DEBUG] Content ingestion userId:", userId);
@@ -44,23 +42,20 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-
-    // Get file buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const fileSize = buffer.length;
-
-    // Run ingestion pipeline
     const result = await ingestContent(buffer, file.name, fileSize, userId);
 
     if (userId && userId !== "anonymous") {
       const adminDb = getAdminDb();
+      console.log("[DEBUG] Creating ingestion notification with link:", `/ingested-course/${result.courseId}`);
       createNotification(adminDb, {
         userId,
         title: "Course Created from File!",
         body: `"${result.title}" with ${result.chapterCount} chapters is ready to explore.`,
         type: "progress",
-        link: `/content-ingestion/${result.courseId}`,
+        link: `/ingested-course/${result.courseId}`,
       }).catch(() => { });
     }
 
