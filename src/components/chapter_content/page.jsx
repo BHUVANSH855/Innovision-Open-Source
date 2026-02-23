@@ -156,6 +156,11 @@ const Page = ({ chapter, roadmapId }) => {
                         setTasks(chapterData.chapter.tasks);
                         setGenerating(false);
                         resolve();
+                    } else if (chapterData.chapter.process === "failed") {
+                        clearInterval(fetchInterval);
+                        setError(chapterData.chapter.error || "Chapter generation failed");
+                        setGenerating(false);
+                        reject(new Error("Chapter generation failed"));
                     }
                 } catch (error) {
                     clearInterval(fetchInterval);
