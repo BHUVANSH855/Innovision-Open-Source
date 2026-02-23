@@ -35,8 +35,8 @@ export async function GET(request) {
     return NextResponse.json({
       count,
       courses,
-      limit: 1,
-      remaining: Math.max(0, 1 - count)
+      limit: 5,
+      remaining: Math.max(0, 5 - count)
     });
   } catch (error) {
     console.error("Error fetching YouTube course status:", error);
