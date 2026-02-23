@@ -35,6 +35,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/contexts/auth";
+import { useNotifications } from "@/contexts/notifications";
 import { useRouter } from "next/navigation";
 import { loader } from "@/components/ui/Custom/ToastLoader";
 
@@ -88,6 +89,7 @@ export default function Page() {
     topics: ["", "", ""],
   });
   const { user } = useAuth();
+  const { fetchNotifications } = useNotifications();
   const router = useRouter();
   const { showLoader } = loader();
 
@@ -208,6 +210,7 @@ export default function Page() {
           if (data.process === "completed") {
             toast.success("Curriculum course generated successfully");
             showLoader();
+            await fetchNotifications();
             router.push(`/roadmap/${id}`);
           } else {
             toast.error(data.message || "Failed to generate course");
@@ -296,6 +299,7 @@ export default function Page() {
           if (data.process === "completed") {
             toast.success("Engineering course generated successfully");
             showLoader();
+            await fetchNotifications();
             router.push(`/roadmap/${id}`);
           } else {
             toast.error(data.message || "Failed to generate course");
@@ -429,6 +433,7 @@ Return valid JSON only.`;
             clearInterval(interval);
             toast.success("Course ready!");
             showLoader();
+            await fetchNotifications();
             router.push(`/roadmap/${result.id}`);
           } else if (status.process === "error" || status.process === "unsuitable") {
             clearInterval(interval);

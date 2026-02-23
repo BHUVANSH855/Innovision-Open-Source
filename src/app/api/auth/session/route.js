@@ -9,6 +9,9 @@ export async function POST(req) {
     const cookieStore = await cookies();
 
     if (idToken) {
+      const existingSession = cookieStore.get("session");
+      const isNewLogin = !existingSession;
+
       // Set session cookie
       cookieStore.set("session", idToken, {
         httpOnly: true,
@@ -20,20 +23,20 @@ export async function POST(req) {
 
 
       try {
-        const { getAuth } = await import("firebase-admin/auth");
-        const decoded = await getAuth().verifyIdToken(idToken);
-        const userEmail = decoded.email;
-        if (userEmail) {
-          const adminDb = getAdminDb();
-          const now = new Date();
-          const timeStr = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
-          createNotification(adminDb, {
-            userId: userEmail,
-            title: "Welcome back!",
-            body: `You signed in at ${timeStr}. Ready to keep learning?`,
-            type: "system",
-            link: "/profile",
-          }).catch(() => { });
+        if (isNewLogin) {
+          const { getAuth } = await import("firebase-admin/auth");
+          const decoded = await getAuth().verifyIdToken(idToken);
+          const userEmail = decoded.email;
+          if (userEmail) {
+            const adminDb = getAdminDb();
+            createNotification(adminDb, {
+              userId: userEmail,
+              title: "Welcome back!",
+              body: "You recently signed in. Ready to keep learning?",
+              type: "system",
+              link: "/profile",
+            }).catch(() => { });
+          }
         }
       } catch (_) { }
 
