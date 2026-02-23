@@ -64,7 +64,7 @@ async function generateChapter(prompt, number, roadmapId, session) {
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash",
       messages: [
         {
           role: "system",
@@ -81,13 +81,13 @@ async function generateChapter(prompt, number, roadmapId, session) {
     const data = parseJson(response.choices[0].message.content);
 
     if (!data) {
-      throw new Error("Failed to parse OpenAI response");
+      throw new Error("Failed to parse AI response into valid JSON");
     }
 
     await updateDatabase(data, number, roadmapId, session);
   } catch (error) {
     console.error("Error generating chapter:", error);
-    await docRef.delete();
+    await docRef.update({ process: "failed", error: error.message });
   }
 }
 
@@ -105,9 +105,10 @@ async function cleanupStuckChapters(session, roadmapId, number) {
     const data = docSnap.data();
     const timeDiff = Date.now() - (data.timestamp || 0);
 
-    if (data.process === "pending" && timeDiff > 60 * 1000) {
-      console.log(`Deleting stuck chapter: ${number}`);
-      await docRef.delete();
+    // Timeout after 2 minutes (120 * 1000)
+    if (data.process === "pending" && timeDiff > 120 * 1000) {
+      console.log(`Marking stuck chapter as failed: ${number}`);
+      await docRef.update({ process: "failed", error: "Generation timed out" });
     }
   }
 }
@@ -136,7 +137,7 @@ export async function POST(req) {
 
     setTimeout(() => {
       cleanupStuckChapters(session, roadmapId, number);
-    }, 60 * 1000);
+    }, 125 * 1000); // Wait slightly longer than the 2-min timeout check
 
     generateChapter(prompt, number, roadmapId, session);
 
