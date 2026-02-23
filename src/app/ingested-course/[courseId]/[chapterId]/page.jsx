@@ -344,64 +344,70 @@ export default function IngestedChapterPage() {
             {/* Chapter Content */}
             <div className="max-w-4xl mx-auto px-6 py-10">
                 {/* Chapter Header */}
-                <div className="mb-8">
-                    <div className="flex items-center gap-2 text-sm text-purple-500 font-medium mb-2">
-                        <span className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-xs font-bold">
+                <div className="mb-12">
+                    <div className="flex items-center gap-2 text-sm text-purple-600 dark:text-purple-400 font-semibold mb-4 tracking-wider uppercase">
+                        <span className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-xs font-bold border border-purple-500/20 shadow-sm">
                             {chapter.chapterNumber}
                         </span>
                         Chapter {chapter.chapterNumber}
                     </div>
-                    <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
+                    <h1 className="text-4xl lg:text-5xl font-extrabold leading-[1.15] tracking-tight mb-6 bg-linear-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
                         {chapter.title}
                     </h1>
 
                     {/* Native Summary */}
                     {chapter.summary && (
-                        <p className="mt-3 text-lg text-muted-foreground leading-relaxed">
+                        <p className="mt-4 text-xl text-muted-foreground/80 leading-relaxed font-medium max-w-3xl">
                             {chapter.summary}
                         </p>
                     )}
 
                     {/* AI Generated Summary Section */}
-                    <div className="mt-6">
+                    <div className="mt-8">
                         {!aiSummary ? (
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => generateAIContent('summary')}
                                 disabled={loadingSummary}
-                                className="group border-purple-500/30 text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-900/10"
+                                className="group h-10 px-5 border-purple-500/30 text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-900/10 rounded-full transition-all duration-300"
                             >
                                 {loadingSummary ? (
                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                 ) : (
-                                    <Sparkles className="h-4 w-4 mr-2 group-hover:fill-purple-500/20" />
+                                    <Sparkles className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />
                                 )}
                                 Generate Deep Summary
                             </Button>
                         ) : (
-                            <div className="bg-purple-500/5 border border-purple-500/20 rounded-xl p-6 mt-4 animate-in fade-in slide-in-from-top-2">
-                                <h3 className="flex items-center gap-2 text-md font-semibold text-purple-600 dark:text-purple-400 mb-2">
-                                    <Sparkles className="h-4 w-4" />
-                                    AI Summary
+                            <div className="bg-linear-to-br from-purple-500/10 via-purple-500/5 to-transparent border border-purple-500/20 rounded-2xl p-8 mt-6 animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm">
+                                <h3 className="flex items-center gap-2 text-lg font-bold text-purple-600 dark:text-purple-400 mb-4 tracking-tight">
+                                    <Sparkles className="h-5 w-5 fill-purple-500/20" />
+                                    AI Deep Summary
                                 </h3>
-                                <p className="text-sm leading-relaxed text-muted-foreground">
+                                <p className="text-base leading-relaxed text-muted-foreground/90 font-medium">
                                     {aiSummary}
                                 </p>
                             </div>
                         )}
                     </div>
 
-                    <div className="mt-4 flex items-center gap-3 text-sm text-muted-foreground">
-                        <span>{chapter.wordCount?.toLocaleString()} words</span>
-                        <span>•</span>
-                        <span>{estimatedReadTime} min read</span>
+                    <div className="mt-6 flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground/60">
+                        <div className="flex items-center gap-1.5">
+                            <BookOpen className="h-3.5 w-3.5" />
+                            {chapter.wordCount?.toLocaleString()} words
+                        </div>
+                        <span className="opacity-30">•</span>
+                        <div className="flex items-center gap-1.5">
+                            <Clock className="h-3.5 w-3.5" />
+                            {estimatedReadTime} min read
+                        </div>
                     </div>
-                    <hr className="mt-6 border-border/50" />
+                    <div className="h-px w-full bg-linear-to-r from-border/80 via-border/20 to-transparent mt-8" />
                 </div>
 
                 {/* Chapter Text */}
-                <article className="prose prose-lg dark:prose-invert max-w-none leading-relaxed">
+                <article className="prose prose-purple dark:prose-invert max-w-none prose-headings:tracking-tight prose-p:text-muted-foreground/90 prose-p:leading-8 prose-p:text-[1.05rem]">
                     <MarkDown content={chapter.content} />
                 </article>
 
@@ -435,14 +441,14 @@ export default function IngestedChapterPage() {
                         </div>
 
                         {aiTips && (
-                            <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-6">
-                                <ul className="space-y-3">
+                            <div className="bg-linear-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border border-yellow-500/20 rounded-2xl p-8 shadow-sm">
+                                <ul className="space-y-4">
                                     {aiTips.split('\n').filter(t => t.trim()).map((tip, i) => (
-                                        <li key={i} className="flex gap-3 text-foreground/80">
-                                            <span className="shrink-0 w-6 h-6 rounded-full bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 flex items-center justify-center text-xs font-bold">
+                                        <li key={i} className="flex gap-4 text-foreground/80 group">
+                                            <span className="shrink-0 w-8 h-8 rounded-lg bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 flex items-center justify-center text-sm font-bold border border-yellow-500/20 group-hover:scale-110 transition-transform">
                                                 {i + 1}
                                             </span>
-                                            <span className="text-sm leading-6">{tip.replace(/^[-•*]\s*/, '')}</span>
+                                            <span className="text-base leading-7 font-medium pt-0.5">{tip.replace(/^[-•*]\s*/, '')}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -473,17 +479,17 @@ export default function IngestedChapterPage() {
                             <div className="space-y-6">
                                 {quiz.map((q, qIndex) => (
                                     <div key={qIndex} className="bg-card border border-border rounded-xl overflow-hidden">
-                                        <div className="p-4 bg-muted/30 border-b border-border/50">
-                                            <h3 className="font-medium text-lg leading-snug">
+                                        <div className="p-6 bg-linear-to-b from-muted/50 to-muted/20 border-b border-border/50">
+                                            <h3 className="font-bold text-xl leading-snug tracking-tight">
                                                 {qIndex + 1}. {q.question}
                                             </h3>
                                         </div>
-                                        <div className="p-4 space-y-2">
+                                        <div className="p-6 space-y-3">
                                             {q.options.map((option, optIndex) => {
                                                 const isSelected = quizAnswers[qIndex] === optIndex;
                                                 const isCorrect = q.correctAnswer === optIndex;
 
-                                                let className = "w-full justify-start h-auto py-3 px-4 text-left font-normal";
+                                                let className = "w-full justify-start h-auto py-4 px-5 text-left font-medium transition-all duration-200 border-2 rounded-xl group/option";
 
                                                 if (quizSubmitted) {
                                                     if (isCorrect) {
@@ -491,30 +497,34 @@ export default function IngestedChapterPage() {
                                                     } else if (isSelected && !isCorrect) {
                                                         className += " bg-red-500/10 border-red-500/50 text-red-700 dark:text-red-300 hover:bg-red-500/20";
                                                     } else {
-                                                        className += " opacity-50";
+                                                        className += " opacity-40 grayscale-[0.5]";
                                                     }
                                                 } else {
                                                     if (isSelected) {
-                                                        className += " border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300";
+                                                        className += " border-blue-500 bg-blue-500/5 text-blue-700 dark:text-blue-300 shadow-md shadow-blue-500/10";
+                                                    } else {
+                                                        className += " border-border/60 hover:border-primary/40 hover:bg-primary/5";
                                                     }
                                                 }
 
                                                 return (
                                                     <Button
                                                         key={optIndex}
-                                                        variant="outline"
+                                                        variant="ghost"
                                                         className={className}
                                                         onClick={() => handleQuizOptionSelect(qIndex, optIndex)}
                                                         disabled={quizSubmitted}
                                                     >
                                                         <div className="flex items-center w-full">
                                                             <div className={cn(
-                                                                "w-6 h-6 rounded-full border flex items-center justify-center mr-3 text-xs",
-                                                                isSelected || (quizSubmitted && isCorrect) ? "border-current" : "border-muted-foreground/30"
+                                                                "w-7 h-7 rounded-lg border-2 flex items-center justify-center mr-4 text-xs font-bold transition-colors",
+                                                                isSelected || (quizSubmitted && isCorrect)
+                                                                    ? "border-current bg-current/10"
+                                                                    : "border-muted-foreground/20 group-hover/option:border-primary/40"
                                                             )}>
                                                                 {String.fromCharCode(65 + optIndex)}
                                                             </div>
-                                                            <span className="flex-1">{option}</span>
+                                                            <span className="flex-1 text-[0.95rem]">{option}</span>
                                                             {quizSubmitted && isCorrect && <CheckCircle2 className="h-5 w-5 text-green-600 ml-2" />}
                                                             {quizSubmitted && isSelected && !isCorrect && <XCircle className="h-5 w-5 text-red-600 ml-2" />}
                                                         </div>
@@ -523,9 +533,9 @@ export default function IngestedChapterPage() {
                                             })}
                                         </div>
                                         {quizSubmitted && q.explanation && (
-                                            <div className="px-4 pb-4 pt-0">
-                                                <div className="bg-muted/50 rounded-lg p-3 text-sm text-muted-foreground">
-                                                    <span className="font-semibold mr-1">Explanation:</span>
+                                            <div className="px-6 pb-6 pt-0">
+                                                <div className="bg-primary/5 rounded-xl p-4 text-[0.9rem] leading-relaxed text-muted-foreground border border-primary/10">
+                                                    <span className="font-bold text-primary mr-2 uppercase tracking-wider text-[10px]">Explanation:</span>
                                                     {q.explanation}
                                                 </div>
                                             </div>
