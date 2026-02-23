@@ -228,13 +228,13 @@ export default function YouTubeCourseView() {
 
   const completedChapters = course.completedChapters || [];
   const progress = course.chapters?.length > 0
-    ? Math.round((completedChapters.length / course.chapters.length) * 100)
+    ? Math.min(100, Math.round((completedChapters.length / course.chapters.length) * 100))
     : 0;
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+      <div className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -592,7 +592,7 @@ export default function YouTubeCourseView() {
                       const phaseChapters = phase?.chapters || [];
                       const completedInPhase = phaseChapters.filter(ch => completedChapters.includes(ch));
                       const phaseProgress = phaseChapters.length > 0
-                        ? Math.round((completedInPhase.length / phaseChapters.length) * 100)
+                        ? Math.min(100, Math.round((completedInPhase.length / phaseChapters.length) * 100))
                         : 0;
 
                       return (

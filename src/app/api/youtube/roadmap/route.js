@@ -226,7 +226,7 @@ export async function GET(request) {
     }
     const totalChapters = courseData.chapters?.length || 0;
     const overallProgress = totalChapters > 0
-      ? Math.round((completedChapters.length / totalChapters) * 100)
+      ? Math.min(100, Math.round((completedChapters.length / totalChapters) * 100))
       : 0;
     let currentPhase = null;
     if (roadmap?.learningPath) {
@@ -301,7 +301,7 @@ export async function PUT(request) {
     }
     const totalChapters = courseData.chapters?.length || 0;
     const progress = totalChapters > 0
-      ? Math.round((completedChapters.length / totalChapters) * 100)
+      ? Math.min(100, Math.round((completedChapters.length / totalChapters) * 100))
       : 0;
 
     const currentProgress = courseData.progress || 0;

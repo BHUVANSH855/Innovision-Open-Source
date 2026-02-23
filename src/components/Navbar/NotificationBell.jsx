@@ -83,7 +83,7 @@ export default function NotificationBell() {
 
 
             {open && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                         <div className="flex items-center gap-2">
                             <Bell className="h-4 w-4 text-foreground" />
