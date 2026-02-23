@@ -304,6 +304,8 @@ export async function PUT(request) {
       ? Math.round((completedChapters.length / totalChapters) * 100)
       : 0;
 
+    const currentProgress = courseData.progress || 0;
+
     await courseRef.update({
       completedChapters,
       progress,
@@ -312,6 +314,19 @@ export async function PUT(request) {
     });
     if (completed) {
       await awardChapterXP(session.user.email, 10, chapterNumber);
+    }
+
+    if (progress === 100 && currentProgress < 100) {
+      try {
+        const { sendCourseCompletionEmail } = await import("@/lib/brevo");
+        await sendCourseCompletionEmail(
+          session.user.email,
+          session.user.name || session.user.email.split('@')[0],
+          courseData.title || "Your YouTube Course"
+        );
+      } catch (emailError) {
+        console.error("Failed to send completion email:", emailError);
+      }
     }
 
     return NextResponse.json({
