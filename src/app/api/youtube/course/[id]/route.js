@@ -101,10 +101,25 @@ export async function PUT(request, { params }) {
         const ytCourseDoc = await ytCourseRef.get();
 
         if (ytCourseDoc.exists) {
+          const currentData = ytCourseDoc.data();
+          const currentProgress = currentData.progress || 0;
+          const newProgress = updates.progress || currentProgress;
+
           await ytCourseRef.update({
             ...updates,
             updatedAt: new Date().toISOString()
           });
+
+          // Trigger course completion email if reached 100%
+          if (newProgress === 100 && currentProgress < 100) {
+            try {
+              const { sendCourseCompletionEmail } = await import("@/lib/brevo");
+              await sendCourseCompletionEmail(session.user.email, session.user.name, currentData.title || "Your YouTube Course");
+            } catch (emailError) {
+              console.error("Failed to send completion email:", emailError);
+            }
+          }
+
           return NextResponse.json({ success: true });
         }
       }

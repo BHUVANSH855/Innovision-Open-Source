@@ -108,7 +108,7 @@ Topic: ${prompt}
         3,
         { operation: 'unsuitable_topic', prompt }
       );
-      
+
       if (!dbSuccess) {
         console.error("Database update failed for unsuitable topic:", {
           userId: session.user.email,
@@ -204,7 +204,7 @@ Topic: ${prompt}
 
     let userMessage = "There was an error while generating your roadmap.";
     let detectedCondition = 'unknown';
-    
+
     if (error.message?.includes("API key") || error.message?.includes("API_KEY")) {
       userMessage = "API key error. Please contact support or try again later.";
       detectedCondition = 'api_key_error';
@@ -241,7 +241,7 @@ Topic: ${prompt}
       3,
       { operation: 'error_handling', prompt, detectedCondition }
     );
-    
+
     if (!dbSuccess) {
       console.error("Database update failed during error handling:", {
         userId: session.user.email,
@@ -291,8 +291,8 @@ export async function POST(req) {
     const roadmapId = nanoid(20);
 
     const dbSuccess = await updateDatabase(
-      { process: "pending", createdAt: Date.now() }, 
-      roadmapId, 
+      { process: "pending", createdAt: Date.now() },
+      roadmapId,
       session.user,
       3,
       { operation: 'initialize_roadmap', prompt: user_prompt.prompt }
