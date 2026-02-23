@@ -7,6 +7,7 @@ async function completeChapter(chapter, roadmapId, user) {
   const docSnap = await docRef.get();
   if (docSnap.exists) {
     const roadmap = docSnap.data();
+    const wasCompleted = roadmap.completed || false;
     const updatedChapters = roadmap.chapters.map((ch) =>
       ch.chapterNumber == chapter ? { ...ch, completed: true } : ch
     );
@@ -81,6 +82,16 @@ async function completeChapter(chapter, roadmapId, user) {
       await docRef.update({
         completed: true,
       });
+
+      // Trigger completion email if just finished
+      if (!wasCompleted) {
+        try {
+          const { sendCourseCompletionEmail } = await import("@/lib/brevo");
+          await sendCourseCompletionEmail(user.email, user.name, roadmap.courseTitle || "Your Roadmap");
+        } catch (emailError) {
+          console.error("Failed to send roadmap completion email:", emailError);
+        }
+      }
     }
     await docRef.update({
       chapters: updatedChapters,

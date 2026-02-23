@@ -53,7 +53,19 @@ export async function checkTrialStatus(userEmail) {
     }
 
     const userData = userDoc.data();
-    const createdAt = userData.createdAt ? new Date(userData.createdAt) : new Date();
+    let createdAt;
+    if (userData.createdAt) {
+      // Handle both Firestore Timestamp and Date string/object
+      createdAt = userData.createdAt.toDate ? userData.createdAt.toDate() : new Date(userData.createdAt);
+    } else {
+      createdAt = new Date();
+    }
+
+    // Check for Invalid Date
+    if (isNaN(createdAt.getTime())) {
+      createdAt = new Date();
+    }
+
     const now = new Date();
     const daysSinceCreation = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
     const daysRemaining = Math.max(0, 7 - daysSinceCreation);
@@ -242,11 +254,10 @@ export async function canGenerateYouTubeCourse(userEmail) {
     return { canGenerate: true, isPremium: true, count };
   }
 
-  // Free users limited to 1 YouTube course
-  if (count >= 1) {
+  if (count >= 5) {
     return {
       canGenerate: false,
-      reason: "Free users can only generate 1 YouTube course. Upgrade to Premium for unlimited access!",
+      reason: "Free users can only generate 5 YouTube courses. Upgrade to Premium for unlimited access!",
       isPremium: false,
       count,
     };

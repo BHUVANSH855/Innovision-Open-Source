@@ -220,6 +220,16 @@ export async function PUT(request, { params }) {
             updatedAt: new Date(),
         }, { merge: true });
 
+        // Trigger course completion email if reached 100%
+        if (finalProgress === 100 && currentProgress < 100) {
+            try {
+                const { sendCourseCompletionEmail } = await import("@/lib/brevo");
+                await sendCourseCompletionEmail(userId, userId, courseData.title || "Your Ingested Course");
+            } catch (emailError) {
+                console.error("Failed to send completion email:", emailError);
+            }
+        }
+
         if (completed) {
             try {
                 const xpResponse = await fetch(`${request.nextUrl.origin}/api/gamification/stats`, {

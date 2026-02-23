@@ -109,46 +109,75 @@ const MarkDown = ({ content }) => {
               });
 
               const styles = {
-                NOTE: "border-blue-500 bg-blue-500/5 text-blue-700 dark:text-blue-300",
-                TIP: "border-green-500 bg-green-500/5 text-green-700 dark:text-green-300",
-                IMPORTANT: "border-purple-500 bg-purple-500/5 text-purple-700 dark:text-purple-300",
-                WARNING: "border-yellow-500 bg-yellow-500/5 text-yellow-700 dark:text-yellow-300",
-                CAUTION: "border-red-500 bg-red-500/5 text-red-700 dark:text-red-300"
+                NOTE: "border-blue-500 bg-blue-500/10 text-blue-800 dark:text-blue-200",
+                TIP: "border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200",
+                IMPORTANT: "border-purple-500 bg-purple-500/10 text-purple-800 dark:text-purple-200",
+                WARNING: "border-amber-500 bg-amber-500/10 text-amber-800 dark:text-amber-200",
+                CAUTION: "border-rose-500 bg-rose-500/10 text-rose-800 dark:text-rose-200"
+              };
+
+              const icons = {
+                NOTE: <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />,
+                TIP: <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />,
+                IMPORTANT: <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />,
+                WARNING: <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />,
+                CAUTION: <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
               };
 
               return (
-                <div className={`my-6 p-4 border-l-4 rounded-r-lg ${styles[type] || styles.NOTE}`}>
-                  <div className="font-bold text-xs uppercase mb-2 flex items-center gap-2">
-                    {type === "NOTE" && <span className="w-2 h-2 rounded-full bg-blue-500" />}
-                    {type === "TIP" && <span className="w-2 h-2 rounded-full bg-green-500" />}
-                    {type === "IMPORTANT" && <span className="w-2 h-2 rounded-full bg-purple-500" />}
-                    {match[1]}
+                <div className={`my-8 p-5 border-l-4 rounded-r-xl shadow-sm ${styles[type] || styles.NOTE}`}>
+                  <div className="font-bold text-xs tracking-widest uppercase mb-3 flex items-center gap-2 opacity-80">
+                    {icons[type]}
+                    {type}
                   </div>
-                  <div className="text-sm leading-relaxed">{remainingContent}</div>
+                  <div className="text-[0.95rem] leading-relaxed font-medium">{remainingContent}</div>
                 </div>
               );
             }
           }
 
           return (
-            <blockquote className="border-l-4 border-muted pl-4 my-6 italic text-muted-foreground">
+            <blockquote className="border-l-4 border-primary/30 pl-6 my-8 italic text-muted-foreground/90 text-lg decoration-primary/20 decoration-2 underline-offset-4">
               {children}
             </blockquote>
           );
         },
         h2({ children }) {
           return (
-            <h2 className="text-2xl font-bold mt-12 mb-6 pb-2 border-b border-border/50 flex items-center gap-3 group">
-              <span className="w-1.5 h-6 bg-primary rounded-full" />
+            <h2 className="text-2xl md:text-3xl font-bold mt-16 mb-8 pb-3 border-b border-border/60 flex items-center gap-3 group tracking-tight">
+              <span className="w-2 h-8 bg-linear-to-b from-primary to-primary/40 rounded-full shadow-sm shadow-primary/20" />
               {children}
             </h2>
           );
         },
         h3({ children }) {
           return (
-            <h3 className="text-xl font-semibold mt-8 mb-4 text-foreground/90">
+            <h3 className="text-xl md:text-2xl font-semibold mt-10 mb-5 text-foreground/90 tracking-tight flex items-center gap-2">
+              <span className="w-1 h-5 bg-muted-foreground/20 rounded-full" />
               {children}
             </h3>
+          );
+        },
+        p({ children }) {
+          return (
+            <p className="text-muted-foreground/90 leading-8 mb-6 text-[1.05rem]">
+              {children}
+            </p>
+          );
+        },
+        ul({ children }) {
+          return (
+            <ul className="space-y-3 mb-8 ml-4 list-none">
+              {children}
+            </ul>
+          );
+        },
+        li({ children }) {
+          return (
+            <li className="flex gap-3 text-muted-foreground/90 leading-7">
+              <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
+              <div>{children}</div>
+            </li>
           );
         },
         code({ node, inline, className, children, ...props }) {
@@ -156,11 +185,11 @@ const MarkDown = ({ content }) => {
           const codeString = String(children).trim();
 
           return !inline && match ? (
-            <div className="relative group my-4">
+            <div className="relative group my-8 rounded-xl overflow-hidden border border-border/50 shadow-md">
               {/* Language badge */}
-              <div className={`absolute top-0 left-0 px-3 py-1 text-xs font-medium rounded-tl-md rounded-br-md ${theme === "dark"
-                  ? "text-gray-400 bg-gray-800"
-                  : "text-gray-600 bg-gray-200"
+              <div className={`absolute top-0 left-0 px-4 py-1.5 text-[10px] font-bold tracking-widest uppercase z-20 ${theme === "dark"
+                ? "text-gray-400 bg-gray-900/80 backdrop-blur-sm border-r border-b border-white/5"
+                : "text-gray-500 bg-gray-100/80 backdrop-blur-sm border-r border-b border-black/5"
                 }`}>
                 {match[1]}
               </div>
@@ -170,10 +199,11 @@ const MarkDown = ({ content }) => {
 
               <SyntaxHighlighter
                 customStyle={{
-                  fontSize: "14px",
-                  borderRadius: "6px",
-                  paddingTop: "2.5rem",
-                  backgroundColor: theme === "dark" ? "#111827" : "#f9fafb",
+                  fontSize: "13.5px",
+                  lineHeight: "1.6",
+                  padding: "3rem 1.5rem 1.5rem 1.5rem",
+                  margin: "0",
+                  backgroundColor: theme === "dark" ? "#0a0a0c" : "#fafafa",
                 }}
                 style={codeTheme}
                 language={match[1]}
@@ -185,7 +215,7 @@ const MarkDown = ({ content }) => {
             </div>
           ) : (
             <code
-              className={`${className || ""} text-sm bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded`}
+              className={`${className || ""} text-[0.9em] font-medium bg-muted px-1.5 py-0.5 rounded-md text-primary`}
               {...props}
             >
               {children}
