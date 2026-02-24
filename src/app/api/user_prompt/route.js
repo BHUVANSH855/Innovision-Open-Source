@@ -4,10 +4,11 @@ import { adminDb, FieldValue } from "@/lib/firebase-admin";
 import { nanoid } from "nanoid";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { canGenerateCourse } from "@/lib/premium";
+import { createNotification } from "@/lib/create-notification";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
+  model: "gemini-2.0-flash",
   generationConfig: {
     temperature: 0.7,
     topP: 0.8,
@@ -143,6 +144,19 @@ Topic: ${prompt}
       3,
       { operation: 'course_completion', prompt }
     );
+
+    // Create notification for completion
+    try {
+      await createNotification(adminDb, {
+        userId: session.user.email,
+        title: "Course Ready!",
+        body: `Your generated course is ready.`,
+        type: "progress",
+        link: `/roadmap/${id}`,
+      });
+    } catch (notifError) {
+      console.warn("Failed to create course generation notification:", notifError);
+    }
 
     // Award 10 XP for generating a course
     try {

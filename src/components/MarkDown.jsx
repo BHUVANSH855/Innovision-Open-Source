@@ -224,7 +224,7 @@ const MarkDown = ({ content }) => {
         },
       }}
     >
-      {content}
+      {content || ""}
     </ReactMarkdown>
   );
 };

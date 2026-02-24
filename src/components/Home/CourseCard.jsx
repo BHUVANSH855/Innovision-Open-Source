@@ -10,8 +10,8 @@ import DeleteRoadmap from "./DeleteRoadmap";
 import ArchiveCourse from "./ArchiveCourse";
 import DuplicateCourse from "./DuplicateCourse";
 
-const CourseCard = ({ course, onDelete, isSelectable, isSelected, onSelect }) => {
-  const { id, courseTitle, courseDescription, chapterCount, difficulty, chapters } = course;
+const CourseCard = ({ course, onDelete, onArchive, isSelectable, isSelected, onSelect }) => {
+  const { id, courseTitle, courseDescription, chapterCount, difficulty, chapters, archived } = course;
 
   // Calculate progress percentage
   const calculateProgress = () => {
@@ -97,6 +97,12 @@ const CourseCard = ({ course, onDelete, isSelectable, isSelected, onSelect }) =>
                 courseTitle={courseTitle}
                 onDuplicate={onDelete}
               />
+              <ArchiveCourse
+                id={id}
+                courseTitle={courseTitle}
+                isArchived={archived}
+                onArchive={onArchive || onDelete}
+              />
               <DeleteRoadmap
                 id={id}
                 onDelete={onDelete}
@@ -118,8 +124,8 @@ const CourseCard = ({ course, onDelete, isSelectable, isSelected, onSelect }) =>
               <span className="text-muted-foreground">Progress</span>
             </div>
             <span className={`font-semibold ${progress === 100 ? 'text-green-600 dark:text-green-400' :
-                progress > 0 ? 'text-blue-600 dark:text-blue-400' :
-                  'text-muted-foreground'
+              progress > 0 ? 'text-blue-600 dark:text-blue-400' :
+                'text-muted-foreground'
               }`}>
               {progress}%
             </span>

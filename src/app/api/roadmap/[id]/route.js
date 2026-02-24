@@ -96,3 +96,44 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
+export async function PATCH(request, { params }) {
+  try {
+    const session = await getServerSession();
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = params;
+    const { archived } = await request.json();
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Course ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const courseRef = adminDb
+      .collection("users")
+      .doc(session.user.email)
+      .collection("roadmaps")
+      .doc(id);
+
+    await courseRef.update({
+      archived: !!archived,
+      updatedAt: new Date().toISOString(),
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: archived ? "Course archived" : "Course restored",
+    });
+  } catch (error) {
+    console.error("Error updating course:", error);
+    return NextResponse.json(
+      { error: "Failed to update course" },
+      { status: 500 }
+    );
+  }
+}

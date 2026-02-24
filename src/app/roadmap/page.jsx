@@ -482,6 +482,7 @@ export default function page() {
                                         <CourseCard
                                             course={roadmap}
                                             onDelete={fetchRoadmaps}
+                                            onArchive={fetchRoadmaps}
                                             isSelectable={selectionMode}
                                             isSelected={selectedCourses.includes(roadmap.id)}
                                             onSelect={handleSelectCourse}
