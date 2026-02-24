@@ -81,6 +81,7 @@ const CertificateGenerator = ({ certificateData }) => {
     const words = safeTitle.split(" ");
     let y = 470;
 
+    let line = "";
     for (let i = 0; i < words.length; i++) {
       const testLine = line + words[i] + " ";
       const metrics = ctx.measureText(testLine);
