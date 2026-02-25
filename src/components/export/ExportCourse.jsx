@@ -242,70 +242,111 @@ const ExportCourse = ({ courseId, courseTitle }) => {
               });
 
               // Subtopic content
+              // Subtopic content
               const content = subtopic.content || subtopic.description || "";
-              console.log(`Content type: ${typeof content}`, content);
 
-              if (content && typeof content === 'string' && content.trim()) {
+              if (content) {
                 doc.setFontSize(10);
                 doc.setFont("helvetica", "normal");
                 doc.setTextColor(0, 0, 0);
 
-                // Handle code blocks in content
-                const sections = content.split('```');
+                const renderContentBlock = (block) => {
+                  if (typeof block === 'string') {
+                    const lines = doc.splitTextToSize(block, maxWidth);
+                    lines.forEach((line) => {
+                      checkPageBreak();
+                      doc.text(line, margin, yPosition);
+                      yPosition += lineHeight;
+                    });
+                    yPosition += 2;
+                  } else if (typeof block === 'object') {
+                    const type = block.type;
+                    const blockContent = block.content;
 
-                sections.forEach((section, sectionIndex) => {
-                  const isCodeBlock = sectionIndex % 2 === 1;
+                    if (!blockContent) return;
 
-                  if (isCodeBlock) {
-                    // Code block
-                    const codeLines = section.split('\n');
-                    const startIndex = codeLines[0].trim() ? 1 : 0;
+                    if (type === 'code') {
+                      // Handle code blocks
+                      const code = typeof blockContent === 'string' ? blockContent.replace(/```[a-z]*\n|```/g, '') : JSON.stringify(blockContent, null, 2);
+                      const codeLines = code.split('\n');
 
-                    for (let i = startIndex; i < codeLines.length; i++) {
-                      const line = codeLines[i];
-                      checkPageBreak(8);
-
-                      doc.setFillColor(245, 245, 245);
-                      doc.rect(margin, yPosition - 4, maxWidth, 7, 'F');
                       doc.setFont("courier", "normal");
                       doc.setFontSize(9);
                       doc.setTextColor(50, 50, 50);
 
-                      if (line.length > 80) {
-                        const codeParts = doc.splitTextToSize(line, maxWidth - 10);
-                        codeParts.forEach((part) => {
-                          checkPageBreak(8);
-                          doc.setFillColor(245, 245, 245);
-                          doc.rect(margin, yPosition - 4, maxWidth, 7, 'F');
-                          doc.text(part, margin + 3, yPosition);
-                          yPosition += 5;
-                        });
-                      } else {
-                        doc.text(line, margin + 3, yPosition);
-                        yPosition += 5;
-                      }
-                    }
-                    yPosition += 5;
-                  } else {
-                    // Regular text
-                    doc.setFont("helvetica", "normal");
-                    doc.setFontSize(10);
-                    doc.setTextColor(0, 0, 0);
+                      codeLines.forEach((line) => {
+                        checkPageBreak(8);
+                        doc.setFillColor(248, 248, 248);
+                        doc.rect(margin, yPosition - 4, maxWidth, 6, 'F');
 
-                    const paragraphs = section.split('\n\n');
-                    paragraphs.forEach((paragraph) => {
-                      if (paragraph.trim()) {
-                        const lines = doc.splitTextToSize(paragraph, maxWidth);
+                        if (line.length > 80) {
+                          const codeParts = doc.splitTextToSize(line, maxWidth - 6);
+                          codeParts.forEach((part) => {
+                            checkPageBreak(6);
+                            doc.setFillColor(248, 248, 248);
+                            doc.rect(margin, yPosition - 4, maxWidth, 6, 'F');
+                            doc.text(part, margin + 2, yPosition);
+                            yPosition += 5;
+                          });
+                        } else {
+                          doc.text(line, margin + 2, yPosition);
+                          yPosition += 5;
+                        }
+                      });
+                      yPosition += 4;
+                      doc.setFont("helvetica", "normal");
+                      doc.setFontSize(10);
+                      doc.setTextColor(0, 0, 0);
+                    } else if (type === 'points' || Array.isArray(blockContent)) {
+                      const points = Array.isArray(blockContent) ? blockContent : [blockContent];
+                      points.forEach((point) => {
+                        checkPageBreak();
+                        const lines = doc.splitTextToSize(`• ${point}`, maxWidth - 5);
                         lines.forEach((line) => {
-                          checkPageBreak();
-                          doc.text(line, margin, yPosition);
+                          doc.text(line, margin + 5, yPosition);
                           yPosition += lineHeight;
                         });
-                        yPosition += 4;
-                      }
-                    });
+                      });
+                      yPosition += 2;
+                    } else if (type?.startsWith('header')) {
+                      doc.setFont("helvetica", "bold");
+                      const lines = doc.splitTextToSize(blockContent, maxWidth);
+                      lines.forEach((line) => {
+                        checkPageBreak();
+                        doc.text(line, margin, yPosition);
+                        yPosition += lineHeight + 2;
+                      });
+                      doc.setFont("helvetica", "normal");
+                    } else {
+                      // Paragraph or default
+                      const lines = doc.splitTextToSize(blockContent, maxWidth);
+                      lines.forEach((line) => {
+                        checkPageBreak();
+                        doc.text(line, margin, yPosition);
+                        yPosition += lineHeight;
+                      });
+                      yPosition += 2;
+                    }
                   }
-                });
+                };
+
+                if (Array.isArray(content)) {
+                  content.forEach(renderContentBlock);
+                } else {
+                  // Fallback for legacy string content
+                  const sections = content.split('```');
+                  sections.forEach((section, sectionIndex) => {
+                    const isCodeBlock = sectionIndex % 2 === 1;
+                    if (isCodeBlock) {
+                      renderContentBlock({ type: 'code', content: section });
+                    } else {
+                      const paragraphs = section.split('\n\n');
+                      paragraphs.forEach((p) => {
+                        if (p.trim()) renderContentBlock(p);
+                      });
+                    }
+                  });
+                }
               }
 
               yPosition += 8;
