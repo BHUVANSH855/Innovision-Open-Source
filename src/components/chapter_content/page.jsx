@@ -387,35 +387,6 @@ const Page = ({ chapter, roadmapId }) => {
                             </div>
                         )}
 
-                        {/* Chapter Cover Image */}
-                        {chapterData.coverImage && chapterData.coverImage.url && (
-                            <div className="mb-6 rounded-xl overflow-hidden border border-border/30 shadow-lg">
-                                <img
-                                    src={chapterData.coverImage.url}
-                                    alt={chapterData.coverImage.alt || chapterData.chapterTitle}
-                                    className="w-full h-48 sm:h-56 lg:h-64 object-cover"
-                                    loading="lazy"
-                                />
-                                {chapterData.coverImage.photographer && (
-                                    <div className="px-4 py-2 bg-muted/50 text-xs text-muted-foreground flex items-center gap-1">
-                                        📷 Photo by{" "}
-                                        {chapterData.coverImage.photographerUrl ? (
-                                            <a
-                                                href={chapterData.coverImage.photographerUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="underline hover:text-foreground transition-colors"
-                                            >
-                                                {chapterData.coverImage.photographer}
-                                            </a>
-                                        ) : (
-                                            <span>{chapterData.coverImage.photographer}</span>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
                         {selectedIndex < chapterData.subtopics.length ? (
                             <div className="mb-6">
                                 <div className="flex justify-between text-sm text-gray-500 mb-2">

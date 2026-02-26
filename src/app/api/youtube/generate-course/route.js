@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { fetchUnsplashImage } from "@/lib/unsplash-service";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 function safeJsonParse(text) {
@@ -157,21 +156,6 @@ IMPORTANT RULES:
         ...ch,
         number: ch.number || index + 1
       }));
-
-      // Fetch unique images for each chapter based on chapter title
-      for (const chapter of courseData.chapters) {
-        try {
-          const chapterImage = await fetchUnsplashImage(chapter.title);
-          chapter.coverImage = chapterImage || null;
-          // Small delay to respect API rate limits
-          if (courseData.chapters.length > 5) {
-            await new Promise(resolve => setTimeout(resolve, 300));
-          }
-        } catch (imgErr) {
-          console.warn(`[Unsplash] Failed to fetch image for chapter: ${chapter.title}`, imgErr.message);
-          chapter.coverImage = null;
-        }
-      }
     } else {
       courseData.chapters = [];
     }

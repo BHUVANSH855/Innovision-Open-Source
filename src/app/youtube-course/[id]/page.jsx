@@ -360,36 +360,6 @@ export default function YouTubeCourseView() {
                       )}
                     </div>
                   </CardHeader>
-                  {/* Chapter Cover Image */}
-                  {activeChapter.coverImage && activeChapter.coverImage.url && (
-                    <div className="px-6 pb-4">
-                      <div className="rounded-xl overflow-hidden border border-border/30 shadow-lg shadow-purple-500/5">
-                        <img
-                          src={activeChapter.coverImage.url}
-                          alt={activeChapter.coverImage.alt || activeChapter.title}
-                          className="w-full h-48 sm:h-56 lg:h-64 object-cover"
-                          loading="lazy"
-                        />
-                        {activeChapter.coverImage.photographer && (
-                          <div className="px-4 py-2 bg-muted/50 text-xs text-muted-foreground flex items-center gap-1">
-                            📷 Photo by{" "}
-                            {activeChapter.coverImage.photographerUrl ? (
-                              <a
-                                href={activeChapter.coverImage.photographerUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline hover:text-foreground transition-colors"
-                              >
-                                {activeChapter.coverImage.photographer}
-                              </a>
-                            ) : (
-                              <span>{activeChapter.coverImage.photographer}</span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
                 </Card>
 
                 {/* Chapter Content */}

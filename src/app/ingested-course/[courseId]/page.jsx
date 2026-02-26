@@ -308,37 +308,6 @@ export default function IngestedCoursePage() {
                     </div>
                 </ScrollReveal>
 
-                {/* Cover Image */}
-                {course.coverImage && course.coverImage.url && (
-                    <ScrollReveal delay={50}>
-                        <div className="mb-8 rounded-2xl overflow-hidden border border-border/30 shadow-lg shadow-purple-500/5">
-                            <img
-                                src={course.coverImage.url}
-                                alt={course.coverImage.alt || course.title}
-                                className="w-full h-56 sm:h-72 lg:h-80 object-cover"
-                                loading="lazy"
-                            />
-                            {course.coverImage.photographer && (
-                                <div className="px-4 py-2 bg-muted/50 text-xs text-muted-foreground flex items-center gap-1">
-                                    📷 Photo by{" "}
-                                    {course.coverImage.photographerUrl ? (
-                                        <a
-                                            href={`${course.coverImage.photographerUrl}?utm_source=innovision&utm_medium=referral`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="underline hover:text-foreground transition-colors"
-                                        >
-                                            {course.coverImage.photographer}
-                                        </a>
-                                    ) : (
-                                        <span>{course.coverImage.photographer}</span>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </ScrollReveal>
-                )}
-
                 {/* Start Reading Button */}
                 {chapters.length > 0 && (
                     <ScrollReveal delay={200}>
