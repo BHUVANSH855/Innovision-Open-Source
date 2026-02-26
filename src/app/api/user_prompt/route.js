@@ -5,7 +5,6 @@ import { nanoid } from "nanoid";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { canGenerateCourse } from "@/lib/premium";
 import { createNotification } from "@/lib/create-notification";
-import { fetchUnsplashImage } from "@/lib/unsplash-service";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
@@ -123,22 +122,6 @@ Topic: ${prompt}
     }
 
     const difficulty = user_prompt.difficulty === "in-depth" ? "inDepth" : user_prompt.difficulty;
-
-    // Fetch unique images for each chapter based on chapter title
-    if (parsed.chapters && Array.isArray(parsed.chapters)) {
-      for (const chapter of parsed.chapters) {
-        try {
-          const chapterImage = await fetchUnsplashImage(chapter.chapterTitle);
-          chapter.coverImage = chapterImage || null;
-          if (parsed.chapters.length > 5) {
-            await new Promise(resolve => setTimeout(resolve, 300));
-          }
-        } catch (imgErr) {
-          console.warn(`[Unsplash] Failed to fetch image for chapter: ${chapter.chapterTitle}`, imgErr.message);
-          chapter.coverImage = null;
-        }
-      }
-    }
 
     await adminDb.collection("users").doc(session.user.email).set(
       {

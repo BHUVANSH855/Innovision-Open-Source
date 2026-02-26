@@ -76,7 +76,6 @@ export async function GET(request, { params }) {
                 summary: data.summary,
                 wordCount: data.wordCount,
                 order: data.order,
-                coverImage: data.coverImage || null,
                 isCompleted: progressData.completedChapters?.includes(data.chapterNumber) || false,
             };
         });
@@ -86,7 +85,6 @@ export async function GET(request, { params }) {
                 id: courseSnap.id,
                 title: courseData.title,
                 description: courseData.description,
-                coverImage: courseData.coverImage || null,
                 metadata: courseData.metadata,
                 source: courseData.source,
                 status: courseData.status,

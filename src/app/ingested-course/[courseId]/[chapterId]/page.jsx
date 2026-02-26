@@ -32,7 +32,6 @@ export default function IngestedChapterPage() {
     // Data States
     const [chapter, setChapter] = useState(null);
     const [courseTitle, setCourseTitle] = useState("");
-    const [coverImage, setCoverImage] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [readProgress, setReadProgress] = useState(0);
@@ -135,7 +134,6 @@ export default function IngestedChapterPage() {
                 const data = await res.json();
                 setChapter(data.chapter);
                 setCourseTitle(data.courseTitle || "");
-                setCoverImage(data.coverImage || null);
                 // Reset AI Text states on chapter change
                 setAiSummary(null);
                 setAiTips(null);
@@ -407,35 +405,6 @@ export default function IngestedChapterPage() {
                     </div>
                     <div className="h-px w-full bg-linear-to-r from-border/80 via-border/20 to-transparent mt-8" />
                 </div>
-
-                {/* Cover Image Section */}
-                {coverImage && coverImage.url && (
-                    <div className="mb-10 rounded-2xl overflow-hidden border border-border/30 shadow-lg shadow-purple-500/5">
-                        <img
-                            src={coverImage.url}
-                            alt={coverImage.alt || courseTitle}
-                            className="w-full h-64 sm:h-80 lg:h-96 object-cover"
-                            loading="lazy"
-                        />
-                        {coverImage.photographer && (
-                            <div className="px-4 py-2 bg-muted/50 text-xs text-muted-foreground flex items-center gap-1">
-                                📷 Photo by{" "}
-                                {coverImage.photographerUrl ? (
-                                    <a
-                                        href={`${coverImage.photographerUrl}?utm_source=innovision&utm_medium=referral`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="underline hover:text-foreground transition-colors"
-                                    >
-                                        {coverImage.photographer}
-                                    </a>
-                                ) : (
-                                    <span>{coverImage.photographer}</span>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                )}
 
                 {/* Chapter Text */}
                 <article className="prose prose-purple dark:prose-invert max-w-none prose-headings:tracking-tight prose-p:text-muted-foreground/90 prose-p:leading-8 prose-p:text-[1.05rem]">
