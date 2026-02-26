@@ -137,14 +137,27 @@ function Roadmap({ roadMap, id }) {
 
             <Link
               href={`/chapter-test/${id}/${index + 1}`}
-              className="flex flex-col border h-max max-w-xl w-[85%] rounded-md p-4 hover:border-blue-400 transition-colors"
+              className="flex flex-col border h-max max-w-xl w-[85%] rounded-md overflow-hidden hover:border-blue-400 transition-colors"
             >
-              <span className="text-secondary-foreground font-semibold">
-                {chapter.chapterNumber || index + 1} . {chapter.chapterTitle || chapter.title || `Chapter ${index + 1}`}
-              </span>
-              <span className="text-secondary-foreground">
-                {chapter.chapterDescription || chapter.description || ""}
-              </span>
+              {/* Chapter Cover Image */}
+              {chapter.coverImage && chapter.coverImage.url && (
+                <div className="w-full">
+                  <img
+                    src={chapter.coverImage.url}
+                    alt={chapter.coverImage.alt || chapter.chapterTitle || chapter.title}
+                    className="w-full h-32 object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div className="p-4">
+                <span className="text-secondary-foreground font-semibold">
+                  {chapter.chapterNumber || index + 1} . {chapter.chapterTitle || chapter.title || `Chapter ${index + 1}`}
+                </span>
+                <span className="text-secondary-foreground">
+                  {chapter.chapterDescription || chapter.description || ""}
+                </span>
+              </div>
             </Link>
           </div>
         ))}

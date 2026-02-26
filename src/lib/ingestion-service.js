@@ -7,6 +7,7 @@ import {
     generateCourseTitle,
     generateCourseDescription,
 } from "@/lib/content-chunker";
+import { fetchUnsplashImage } from "@/lib/unsplash-service";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ["pdf", "txt", "epub"];
@@ -78,7 +79,13 @@ export async function ingestContent(fileBuffer, fileName, fileSize, userId) {
 
     const chapters = await chunkContentWithAI(text, fileName);
 
-
+    // Fetch a single cover image from Unsplash based on the course title
+    let coverImage = null;
+    try {
+        coverImage = await fetchUnsplashImage(courseTitle);
+    } catch (imgErr) {
+        console.warn("[Unsplash] Could not fetch cover image:", imgErr.message);
+    }
 
     const totalWords = chapters.reduce((sum, ch) => sum + ch.wordCount, 0);
     const estimatedReadingTime = Math.ceil(totalWords / 200); // 200 wpm average
@@ -89,6 +96,7 @@ export async function ingestContent(fileBuffer, fileName, fileSize, userId) {
         userId,
         title: courseTitle,
         description: courseDescription,
+        coverImage: coverImage || null,
         source: {
             fileName,
             fileType,
@@ -111,9 +119,23 @@ export async function ingestContent(fileBuffer, fileName, fileSize, userId) {
     const courseId = courseRef.id;
     console.log("[DEBUG] Course created with ID:", courseId);
 
-    // Step 7: Store chapters as subcollection
+    // Step 7: Fetch chapter images and store in subcollection
     const batch = db.batch();
-    chapters.forEach((chapter) => {
+
+    // Process chapters sequentially to avoid hitting rate limits too fast
+    for (const chapter of chapters) {
+        let chapterImage = null;
+        try {
+            // Fetch topic-specific image for the chapter
+            chapterImage = await fetchUnsplashImage(chapter.title);
+            // Small delay to be respectful to API
+            if (chapters.length > 5) {
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+        } catch (imgErr) {
+            console.warn(`[Unsplash] Could not fetch image for chapter ${chapter.chapterNumber}:`, imgErr.message);
+        }
+
         const chapterRef = db
             .collection("ingested_courses")
             .doc(courseId)
@@ -125,11 +147,15 @@ export async function ingestContent(fileBuffer, fileName, fileSize, userId) {
             title: chapter.title,
             content: chapter.content,
             summary: chapter.summary,
+            coverImage: chapterImage || null,
             wordCount: chapter.wordCount,
             order: chapter.chapterNumber,
             createdAt: FieldValue.serverTimestamp(),
         });
-    });
+
+        // Add to chapter objects for returning in response if needed
+        chapter.coverImage = chapterImage;
+    }
 
 
 
