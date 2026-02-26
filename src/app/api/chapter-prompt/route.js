@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getServerSession } from "@/lib/auth-server";
 import { adminDb } from "@/lib/firebase-admin";
+import { fetchUnsplashImage } from "@/lib/unsplash-service";
 
 export const openai = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -82,6 +83,15 @@ async function generateChapter(prompt, number, roadmapId, session) {
 
     if (!data) {
       throw new Error("Failed to parse AI response into valid JSON");
+    }
+
+    // Fetch a unique image for this chapter based on its title
+    try {
+      const chapterImage = await fetchUnsplashImage(data.title || prompt.chapterTitle || `Chapter ${number}`);
+      data.coverImage = chapterImage || null;
+    } catch (imgErr) {
+      console.warn(`[Unsplash] Failed to fetch image for chapter ${number}:`, imgErr.message);
+      data.coverImage = null;
     }
 
     await updateDatabase(data, number, roadmapId, session);

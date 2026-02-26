@@ -59,6 +59,7 @@ export async function GET(request, { params }) {
                 ? allChapters[currentIndex + 1].id
                 : null;
 
+        const courseData = courseSnap.data();
         return NextResponse.json({
             chapter: {
                 id: chapterSnap.id,
@@ -70,7 +71,8 @@ export async function GET(request, { params }) {
                 previousChapterId,
                 nextChapterId,
             },
-            courseTitle: courseSnap.data().title,
+            courseTitle: courseData.title,
+            coverImage: chapterData.coverImage || courseData.coverImage || null,
         });
     } catch (error) {
         console.error("Error fetching chapter:", error);
