@@ -16,6 +16,7 @@ import { useAuth } from "@/contexts/auth";
 import { PageBackground, GridPattern, PageHeader, ScrollReveal, HoverCard } from "@/components/ui/PageWrapper";
 import { saveCourseOffline } from "@/lib/offline";
 import ChatBot from "@/components/chat/ChatBot";
+import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 
 export default function YouTubeCourse() {
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -353,6 +354,17 @@ export default function YouTubeCourse() {
                     )}
                   </Button>
                 </div>
+
+                {isProcessing && !videoInfo && (
+                  <div className="flex gap-4 p-4 bg-muted/30 rounded-xl border border-border/50">
+                    <LoadingSkeleton className="w-40 h-24 rounded-lg" />
+                    <div className="flex-1 space-y-2">
+                      <LoadingSkeleton className="h-5 w-3/4" />
+                      <LoadingSkeleton className="h-4 w-1/2" />
+                      <LoadingSkeleton className="h-4 w-1/3" />
+                    </div>
+                  </div>
+                )}
 
                 {/* Video Preview */}
                 {videoInfo && (
