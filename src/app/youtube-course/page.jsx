@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth";
+import Image from "next/image";
 import { PageBackground, GridPattern, PageHeader, ScrollReveal, HoverCard } from "@/components/ui/PageWrapper";
 import { saveCourseOffline } from "@/lib/offline";
 import ChatBot from "@/components/chat/ChatBot";
@@ -357,11 +358,12 @@ export default function YouTubeCourse() {
                 {/* Video Preview */}
                 {videoInfo && (
                   <div className="flex gap-4 p-4 bg-muted/30 rounded-xl border border-border/50">
-                    <img
-                      src={videoInfo.thumbnail}
+                    <Image
+                      src={videoInfo.thumbnail || videoInfo.thumbnailFallback}
                       alt="Video thumbnail"
-                      className="w-40 h-24 object-cover rounded-lg"
-                      onError={(e) => e.target.src = videoInfo.thumbnailFallback}
+                      fill
+                      className="object-cover rounded-lg"
+                      sizes="160px"
                     />
                     <div className="flex-1">
                       <h3 className="font-semibold line-clamp-2">{videoInfo.title}</h3>

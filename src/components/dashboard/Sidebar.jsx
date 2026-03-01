@@ -14,6 +14,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import LeaderBoard from "@/components/LeaderBoard";
 import EditProfileModal from "@/components/profile/EditProfileModal";
+import Image from "next/image";
 
 const Sidebar = ({ user, rank, difficultyLevel, leaderboard, onUserUpdate }) => {
     const [editModalOpen, setEditModalOpen] = useState(false);
@@ -86,13 +87,15 @@ const Sidebar = ({ user, rank, difficultyLevel, leaderboard, onUserUpdate }) => 
                 <CardHeader className="pb-2">
                     <div className="flex items-center flex-wrap gap-4">
                         {user.image ? (
-                            <img
-                                src={user.image || "/default-avatar.png"}
-                                width={64}
-                                height={64}
-                                alt="Avatar"
-                                className="rounded-full border"
-                            />
+                            <div className="relative w-16 h-16">
+    <Image
+        src={user.image || "/default-avatar.png"}
+        alt="Avatar"
+        fill
+        className="rounded-full border object-cover"
+        sizes="64px"
+    />
+</div>
                         ) : (
                             <Skeleton className="w-16 h-16 rounded-full" />
                         )}
