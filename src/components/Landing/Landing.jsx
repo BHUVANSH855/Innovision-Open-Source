@@ -240,7 +240,7 @@ export default function Landing() {
 
     <li>
       <a
-        href="tel:+919876543210"
+        href="tel:+9198765XXXXX"
         className="hover:text-foreground transition-colors"
       >
         +91 98765 43210
