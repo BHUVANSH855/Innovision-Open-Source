@@ -7,6 +7,7 @@ import CTA from "./CTA";
 import FAQ from "./FAQ";
 import Link from "next/link";
 import BackToTop from "./BackToTop";
+import NewsletterSubscription from "@/components/ui/NewsletterSubscription";
 
 export default function Landing() {
   return (
@@ -243,8 +244,12 @@ export default function Landing() {
                     </svg>
                   </a>
                 </div>
-              </div>
             </div>
+            {/* Newsletter */}
+                <div>
+                  <NewsletterSubscription />
+                </div>
+              </div>
 
             {/* Bottom bar */}
             <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground font-light">
